@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Kiosk Feedback App Design System - Optimized for tablets and accessibility */
+
+@layer base {
+  :root {
+    /* Core brand colors - medical/service industry palette */
+    --background: 248 250 252; /* slate-50 equivalent */
+    --foreground: 203 32% 16%; /* deep blue-gray */
+    
+    --card: 255 255 255; /* pure white */
+    --card-foreground: 203 32% 16%;
+    
+    /* Primary - trustworthy medical blue */
+    --primary: 213 94% 48%; /* blue-500 equivalent */
+    --primary-foreground: 255 255 255;
+    --primary-hover: 213 94% 42%;
+    
+    /* Feedback emotion colors */
+    --emoji-very-sad: 0 84% 60%; /* red-500 */
+    --emoji-sad: 25 95% 53%; /* orange-500 */
+    --emoji-neutral: 45 93% 58%; /* yellow-500 */
+    --emoji-happy: 142 76% 36%; /* green-600 */
+    --emoji-very-happy: 142 86% 28%; /* green-700 */
+    
+    /* UI states */
+    --success: 142 76% 36%;
+    --success-foreground: 255 255 255;
+    --warning: 45 93% 58%;
+    --warning-foreground: 31 41% 17%;
+    --error: 0 84% 60%;
+    --error-foreground: 255 255 255;
+    
+    /* Neutral palette */
+    --muted: 210 40% 96%;
+    --muted-foreground: 203 21% 45%;
+    --border: 214 32% 91%;
+    --input: 255 255 255;
+    --input-border: 214 32% 87%;
+    --ring: 213 94% 48%;
+    
+    /* Kiosk-specific */
+    --kiosk-shadow: 0 10px 30px -5px hsl(203 32% 16% / 0.1);
+    --kiosk-shadow-lg: 0 20px 50px -10px hsl(203 32% 16% / 0.15);
+    --emoji-shadow: 0 8px 25px -5px hsl(var(--primary) / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Spacing for touch targets */
+    --touch-target: 80px;
+    --touch-target-lg: 120px;
+    
+    --radius: 16px;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground overflow-hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    touch-action: manipulation; /* Prevents zoom on touch */
+  }
+  
+  /* Kiosk-specific base styles */
+  .kiosk-container {
+    @apply min-h-screen flex flex-col bg-background;
+    user-select: none; /* Prevent text selection on kiosk */
+  }
+  
+  /* Responsive container adjustments */
+  @media (max-width: 1024px) {
+    .kiosk-container {
+      @apply overflow-y-auto;
+      min-height: 100vh;
+      max-height: 100vh;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .kiosk-container {
+      @apply overflow-y-auto px-4 py-6;
+      min-height: 100vh;
+      max-height: 100vh;
+    }
+  }
+  
+  .touch-target {
+    min-height: var(--touch-target);
+    min-width: var(--touch-target);
+  }
+  
+  .touch-target-lg {
+    min-height: var(--touch-target-lg);
+    min-width: var(--touch-target-lg);
+  }
+}
+
+@layer components {
+  /* Emoji button variants */
+  .emoji-button {
+    @apply touch-target-lg rounded-3xl transition-all duration-300 hover:scale-105 active:scale-95;
+    box-shadow: var(--kiosk-shadow);
+  }
+  
+  .emoji-button:hover {
+    box-shadow: var(--emoji-shadow);
+    transform: translateY(-2px) scale(1.05);
+  }
+  
+  /* Phone-specific emoji sizing and vertical layout */
+  @media (max-width: 768px) {
+    .emoji-button {
+      @apply rounded-2xl;
+      min-height: 80px;
+      min-width: 100%;
+      font-size: 2rem;
+      margin: 0.5rem 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .emoji-button {
+      @apply rounded-xl;
+      min-height: 70px;
+      min-width: 100%;
+      font-size: 1.75rem;
+      margin: 0.25rem 0;
+    }
+  }
+  
+  .emoji-very-sad { @apply bg-red-50 hover:bg-red-100 border-2 border-red-200; }
+  .emoji-sad { @apply bg-orange-50 hover:bg-orange-100 border-2 border-orange-200; }
+  .emoji-neutral { @apply bg-yellow-50 hover:bg-yellow-100 border-2 border-yellow-200; }
+  .emoji-happy { @apply bg-green-50 hover:bg-green-100 border-2 border-green-200; }
+  .emoji-very-happy { @apply bg-green-50 hover:bg-green-100 border-2 border-green-200; }
+  
+  /* Form elements optimized for touch */
+  .kiosk-input {
+    @apply touch-target rounded-xl border-2 border-input-border bg-input px-6 py-4 text-lg;
+    @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none;
+    @apply transition-all duration-200;
+  }
+  
+  .kiosk-button-primary {
+    @apply rounded-2xl bg-primary text-primary-foreground font-semibold transition-all duration-200;
+    @apply hover:bg-primary-hover active:scale-95 shadow-lg hover:shadow-xl;
+    /* Touch-friendly on tablets */
+    @apply min-h-[120px] min-w-[120px] text-xl;
+  }
+  
+  .kiosk-button-secondary {
+    @apply rounded-2xl bg-muted text-muted-foreground font-semibold transition-all duration-200;
+    @apply hover:bg-muted/80 active:scale-95 shadow-md hover:shadow-lg;
+    /* Touch-friendly on tablets */
+    @apply min-h-[120px] min-w-[120px] text-xl;
+  }
+  
+  /* Responsive button sizing */
+  @media (max-width: 768px) {
+    .kiosk-button-primary,
+    .kiosk-button-secondary {
+      @apply min-h-[44px] min-w-full px-4 py-3 text-sm;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .kiosk-button-primary,
+    .kiosk-button-secondary {
+      @apply min-h-[40px] min-w-full px-3 py-2 text-sm;
+    }
+  }
+}

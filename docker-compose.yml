@@ -1,0 +1,98 @@
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - backend
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: ${KAFKA_BROKER_ID}
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      KAFKA_LISTENERS: ${KAFKA_LISTENERS}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP}
+      KAFKA_INTER_BROKER_LISTENER_NAME: ${KAFKA_INTER_BROKER_LISTENER_NAME}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: ${KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR}
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: ${KAFKA_TRANSACTION_STATE_LOG_MIN_ISR}
+    networks:
+      - backend
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      KAFKA_TOPIC: ${KAFKA_TOPIC}
+      PORT: ${API_PORT}
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    depends_on:
+      - kafka
+    networks:
+      - backend
+    restart: unless-stopped
+
+  consumer:
+    build:
+      context: ./consumer
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      KAFKA_TOPIC: ${KAFKA_TOPIC}
+      KAFKA_GROUP_ID: ${KAFKA_GROUP_ID}
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
+    depends_on:
+      - kafka
+      - mongo
+    networks:
+      - backend
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:80"
+    depends_on:
+      - api
+    networks:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+
+networks:
+  backend:
+    driver: bridge

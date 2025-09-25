@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Customer Feedback Kiosk</title>
+    <meta name="description" content="Interactive customer feedback kiosk for collecting service ratings and comments" />
+    <meta name="author" content="Lovable" />
+    
+    <!-- PWA Configuration -->
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Feedback Kiosk">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Prevent pinch zoom and text selection for kiosk use -->
+    <style>
+      * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      input, textarea {
+        -webkit-user-select: auto;
+        -moz-user-select: auto;
+        user-select: auto;
+      }
+    </style>
+
+    <meta property="og:title" content="Customer Feedback Kiosk" />
+    <meta property="og:description" content="Interactive feedback collection system" />
+    <meta property="og:type" content="website" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
